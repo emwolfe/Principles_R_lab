@@ -1,0 +1,312 @@
+---
+title: 'Lab 2: Workshop in open-source programming and statistics'
+output:
+  html_document: default
+editor_options: 
+  chunk_output_type: console
+---
+
+Fun fact! This lab was originally written as an [R Markdown](http://rmarkdown.rstudio.com) Notebook, which means that it was written within R Studio. R is a programming language that is open-source, so it is freely available for download and modification on a variety of operating systems. It is different from programs like Microsoft Excel in that it uses a command-line interface (the console) in order to execute commands. You can use R to do anything from simple math
+
+```{r}
+#for example:
+2 + 2
+```
+
+to running complex statistical analyses. R is also capable of producing publication-worthy figures, maps, and even interactive graphics. Today, we will be curating data from the internet, cleaning it for analysis in R, and then running a series of statistical tests in order to answer a scientific question. Many journal publications often end introduction sections with the main research question. After completing today's lab, we should be able to answer: <b>Does dam removal affect water quality parameters in the Elwha River?</b>
+
+---
+
+#Notes about the lab
+Please note that all instructions within the lab were written on and for Windows 10 machines with R version 3.5.2, Eggshell Igloo (12/20/2018 release). Keyboard shortcuts, some portions of R scripts, and screen displays <b>will vary for Mac OS users</b>. For best results, complete this lab during your scheduled lab time on a lab or other Windows computer, especially since your TA will be able to answer questions!
+
+Additional disclaimer: For simplicity, we are running parametric statistical tests in this lab and assuming that assumptions of normality and homoscedascity are met without transformation.
+
+#Housekeeping before we get started...
+1. Download the addendum (<code>Lab_2_addendum.docx</code>) from D2L.
+2. Create a new folder on your Desktop called <code>Lab 2</code>.
+3. Move your downloaded addendum into the new folder on the desktop. This folder is going to be your working directory, so anything else you download needs to be moved there.
+
+![Figure 1. Screenshot of spreadsheet after finding and replacing spaces and symbols in Excel.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\inside_folder.jpg)
+
+---
+#Step 1: Collect the data
+
+Before we can use R, we need to collect our data. Today we will be using a publicly-available dataset from the United States Geological Survey (USGS). The title of the study we are using is: <b>Ecological parameters in the Elwha River estuary before and during dam removal</b>. The USGS page is located at this URL: https://www.sciencebase.gov/catalog/item/58e5437ae4b09da679997d4e. Look through all of the Child Items by clicking More; we will be going to the file entitled: Water quality in the Elwha River estuary, Washington, from 2006 to 2014. Visit this page and check out the information provided. You should find a summary of the study, followed by a section titled "Attached Files" that includes two files.
+
+<b>In the lab addendum, give a brief description of the types of samples that were collected and over what time frame. Do you have an initial hypothesis about water quality before and during dam removal? Explain your reasoning behind your hypothesis.</b>
+
+The .csv is a comma-separated values text file. This type of file is viewable as a spreadsheet in Excel, and what we will use to import our data into R. Download this and move it to your desktop folder <code>Lab 2</code> on the lab computer but do NOT change the name of the file. The file name should be: <code>Elwha_estuary_water_quality_2006-2014.csv</code>.
+
+The other file is an .xml document that gives us available metadata. Metadata are data about data--in other words, metadata are the details, labels, and notes that help provide context for variables or categories that appear in the raw dataset. For example, if we labeled study sites A, B, and C in our raw data file, the metadata might tell us the GPS coordinates, names of the nearest municipality, or other details that would help someone unfamiliar with the project to understand the data. In ecological datasets, species are often represented by codes (e.g. ALVI stands for <i>Alnus viridis</i>), so the full species names are included in the metadata. It is important to keep good metadata files associated with raw data files and R scripts to improve reproducibility. Just think about how hard it is to read someone else's spreadsheet! Feel free to take a look at the .xml document, but we don't need to download it for our analyses. <b>We will reference it later to find out in what units the water quality parameters were measured for our figures.</b>
+
+#Step 2: Clean and format the data
+
+Now that we have our data downloaded locally, let's open it up in Excel. Move your file from your downloads to the Desktop folder you created. Navigate to your Lab 2 folder and open up the .csv file. If some of the values appear as ###, that means that the column isn't wide enough. Select all (<code>Ctrl + A</code>) and click on Format on the Home ribbon, then select AutoFit Column Width. You can also double click on an individual column line between cells at the header row, and it will change the column size so you can see everything written in the column (it will fit to the data). It should look like this:
+
+![Figure 2. Screenshot of the downloaded csv spreadsheet.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\csv_view.jpg)
+
+The structure of this spreadsheet is critical to analysis in R. Some key things to notice include:
+
+1. <b>Data are organized by rows and columns with descriptive column headers.</b> Cell A1 contains the first column header, and columns continue across row 1. There are no merged cells and there are no empty rows.
+2. <b>Samples are organized by row, and variables by column.</b> This format is relatively standard for analyses, especially when we are importing files into R. 
+3. <b>All sampling times are included in a single table of data.</b> In previous quarters, you might have included multiple trials all on the same sheet, skipping a few rows in between. Our data need to be organized in such a way that the values are continuous, with no missing rows. Check out how the different sampling dates and sites are coded so that they can all be included within the same table.
+
+This is how most types of data should be organized for statistical analysis. When you complete your own projects later in the quarter, don't be afraid to come back to this tutorial! However, as nicely as these data are organized for us, we do need to make a few changes before we can import our .csv into R. Let's list them here:
+
+1. <b>Column headers should not have spaces within the names.</b> Let's replace those now by pressing <b>Ctrl + H</b> (Find and Replace). Highlight only row 1 and fill out the box like in the screenshot below (replacing all spaces with underscores), then hit Replace All (you should see 14 replacements).
+
+![Figure 3. Screenshot of spreadsheet after finding and replacing spaces in Excel.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\replace_spaces.jpg)
+
+2. <b>NS (no sample) needs to be replaced with NA.</b> This is just so R will know to exclude these rows. Go ahead and press <b>Ctrl + H</b> again to find and replace all of the "NS" values with "NA" values instead. You should see 112 replacements.
+
+![Figure 4. Screenshot of spreadsheet after finding and replacing spaces in Excel.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\NS_replace.jpg)
+
+We should have a spreadsheet that looks something like this:
+
+![Figure 5. Screenshot of spreadsheet after finding and replacing spaces and "NS" in Excel.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\after_replaces.jpg)
+
+3. <b>Remove the + and % that appear in two of the column headers.</b> It will make it easier to refer to these columns in R if we change their names now. Replace the <b>plus sign</b> with the word <b>and</b>, and replace the <b>percent sign</b> with <b>Perc</b>.
+
+![Fig. 6 Screenshot of spreadsheet after finding and replacing spaces and symbols in Excel.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\replace_symbols.jpg)
+
+Save your changes - you should just be able to press <code>Ctrl+S</code> because you already moved the file into your desktop folder <code>Lab 2</code>. <b>Do not change the file name</b>. This is very important, because this tutorial assumes we have the same names. Now we're ready to import into R!
+
+#Step 3: Import the data into R
+
+Go ahead and open R Studio (search for it under the start window icon in the bottom left, or Applications on a Mac). Let's orient ourselves. You should see something like this open up on your computer, but the different parts of the display are annotated for you below:
+
+![Figure 7. Screenshot of R Studio. is.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\studio_annotated.jpg)
+
+We want to be able to write and edit our script, so let's create a new script. Click on the dropdown menu directly beneath File, and select R Script. You can also use the keyboard shortcut <code>Ctrl + Shift + N</code>.
+
+![Figure 8. Create a new script in R Studio.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\create_script.jpg)
+
+R Studio is great because there is an autosave feature, but we should still save our script so we can use it another time. Go to File and Save as... and save your new script as <code>Lab_2_script</code>.
+
+![Figure 9. Saving a new script in R Studio.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\save_script.jpg)
+
+It will automatically be given the .R file type. Now we can start using R! Remember where you saved your .csv file? Go ahead and open the location in Windows Explorer. It should look something like this (don't worry about the extra files that show up here):
+
+![Figure 10. Screenshot of our Lab 2 folder on the desktop, which will serve as our working directory.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\folder_csv.jpg)
+
+
+Once you have that open, go ahead and right click on the file address and <b>Copy address as text</b>. 
+
+![Figure 11. Right-click on the file address at the top to Copy address as text and paste into R Studio.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\copy_address.jpg)
+
+To set your working directory, type the following code into your newly-saved script and paste your path in between the quotation marks:
+
+```{r}
+
+#You may need to add extra backslashes for your path to resemble what is in the example. Mine originally pastes in as C:\Users\emwolfe\Desktop\Lab 2, but for R to read it, we need to have double backslashes. Failing to add the backslashes will cause an error message and you won't be able to set the working directory.
+
+setwd("C:\\Users\\emwolfe\\Desktop\\Lab 2")
+getwd()
+
+```
+
+Does your output resemble the example output? R should confirm your current working directory is the same as the path you pasted in. If anything else shows up after <code>getwd()</code>, consult your neighbors.
+
+<b>Once you have set up your own working directory and copy-paste the inputs and outputs from the console into the addendum.</b>
+
+Now that we have told R where to look for our files, we can import our .csv from earlier.
+
+```{r}
+
+Elwha_data <- read.csv("Elwha_estuary_water_quality_2006-2014.csv") #reading in our .csv
+str(Elwha_data) #tells us about our data frame
+Elwha_data[1:5,1:5] #lets us preview the first 5 rows and columns, respectively - [r,c], and the : between numbers means that you are looking at the continuous range between them, like what appears in Excel when you select consecutive cells. You could read it as "through," so that 1:5 would read 1 through 5.
+
+```
+
+First, we are creating an object called Elwha_data that is a data frame, using the data in our .csv file. <b>R is case sensitive.</b> When typing function or object names, you must be <b>exact</b> or R will produce an error because it will not recognize the command. This is why it is helpful to replace spaces with underscores because they are easier to see. Our data frame name has both a capital letter to start, and an underscore that we need to remember to be able to reference it.
+
+
+Using <code>str()</code> is helpful because we can get an idea of the <b><u>str</u></b>ucture of our object (<code>Elwha_data</code>), and about what types of data R thinks is in our columns. If you look at the output, you can see that <code>Dam_Condition</code> is called a <code>Factor</code> and Temperature is <code>numeric</code>, while Replicate is <code>integer</code>. Let's recall what these words mean, especially with respect to data.
+
+1. <b><code>Factor</code> refers to categorical data.</b> Things like HEADS or TAILS, or TRUE and FALSE are categorical. Data can be placed into a particular category; it is discrete. There are only so many categories that data can be sorted into, and those categories cannot be broken down into smaller classes. Factors usually contain words, which make them easy to spot.
+2. <b><code>Numeric</code> is another word for continuous data.</b> These data can take on any value--even a fraction.  An example of continuous data are measurements of plant height (or just height in general). These data are always numbers. 
+3. <b><code>Integer</code> is another word for whole number.</b> This means that they are never fractions (i.e. decimals). Count data would fall into this category because you can only count a whole number of elephants, for example. You would (hopefully) never count half an elephant.
+
+<b>Now it's your turn. Read in the Elwha dataset. Check the structure using str(), and then preview the first 10 rows and 3 columns. Copy-paste the inputs and outputs from the console into the addendum.</b>
+
+#Step 4: Summarize the data in R
+
+Now that we have discussed types of data, let's generate a summary of one of our variables. We want to know what pH looks like--what are the minimum, maximum, and middle values? These make up what are called <b>descriptive statistics</b>. Let's start by finding our mean, which is the average of our pH values.
+
+```{r}
+
+mean(Elwha_data$pH) #the dollar sign helps us give R an absolute reference, similar to Excel syntax
+
+```
+
+Does this make sense? We need to add an argument to help R exclude the rows with missing pH values.
+
+```{r}
+
+mean(Elwha_data$pH, na.rm = TRUE) #remove rows within column with value NA
+
+```
+
+Let's try finding the median now. The median gives us an idea of how skewed our data are--you might have heard of median home prices or income. It tells us where the middle point of our distribution is.
+
+```{r}
+
+median(Elwha_data$pH, na.rm=TRUE)
+
+```
+
+Now let's define our range, which tells us the minimum and maximum values within our dataset.
+
+```{r}
+
+#you can use a semi-colon to combine multiple commands to be more efficient
+min(Elwha_data$pH, na.rm = TRUE); max(Elwha_data$pH, na.rm = TRUE)
+
+```
+
+The standard deviation is the final part of our five-point summary, and tells us how much variation is in our data. In other words, it tells us how far the data is spread from the mean.
+
+```{r}
+
+sd(Elwha_data$pH, na.rm = TRUE)
+
+```
+
+Now that we know the standard deviation, we can report: <b>The pH (mean?sd) averaged 7.35 ? 0.359 over the course of the study</b>. This is similar to the calculation of confidence intervals, which give us the probability that the true mean falls within a certain range. Since we have been using alpha = 0.05 as our significance threshold in Principles, let's calculate a 95% confidence interval for pH.
+
+Instead of standard deviation, we are going to calculate standard error based on our alpha = 0.05. However, we need to divide 0.05 in half (because we are doing a two-sided test), because we need to consider values at the very tail ends on either side of a normal distribution, like the one pictured below.
+
+![Figure 12. Example of a normal distribution from MathisFun.com.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\normal-distrubution-large.svg)
+
+```{r}
+
+mean_pH <- mean(Elwha_data$pH, na.rm = TRUE)
+std_pH <-sd(Elwha_data$pH, na.rm = TRUE)
+error <- qnorm(0.975)*std_pH/sqrt(147) #147 is the total number of observations (our n), which is found in the str() output
+left <- mean_pH-error
+right <- mean_pH+error
+left; right
+
+```
+
+We can interpret this as being 95% confident that the true mean pH is found between 7.29 and 7.41, assuming that our distribution is normal. 
+
+<b>Now go back and complete Step 4 (i.e. generate summary statistics) for <code>Temperature</code> and <code>Turbidity</code>. Copy-paste your inputs and outputs from the console into the addendum. 
+
+Calculate the 95% confidence interval for Temperature. Copy-paste your inputs and outputs from the console into the addendum.</b>
+
+#Step 5: Analyze the data in R
+
+However, we want to answer our question about dam removal, and whether or not that affected water quality. Think back to what <code>str()</code> told us about our data--we have two treatment categories: before removal, and during dam removal. Let's compare the mean pH in each group, and see if there is a treatment effect; i.e., did dam removal affect pH?
+
+Because we have two treatment groups, we can use a t-test, which is hopefully familiar from previous quarters of Principles. The t-test is used for when there are two independent categories (<code>Before removal</code> and <code>During removal</code>) for a given variable (<code>Dam_Condition</code>), and a continuous dependent variable (<code>pH</code>). A t-test is used to determine if there are significant differences between the means of the two groups. This video from Bozeman Science on Youtube may be helpful: https://www.youtube.com/watch?v=pTmLQvMM-1M. It demonstrates how to run a t-test in Excel, though. Let's run one in R.
+
+```{r}
+
+t.test(pH~Dam_Condition, data=Elwha_data)
+
+```
+
+Let's report our results in the context of the study: <b>pH was significantly higher during dam removal compared to before dam removal (t=-4.56, df=26.9, p=0.000101)</b>. Note that the means for each group are displayed at the end of the t-test output. 
+
+<b>Determine if there is a significant difference in turbidity before and during dam removal. Report your results in the context of the study. Remember to copy-paste your inputs and outputs from the console into the addendum.</b>
+
+So now we know that the dam removal process affected pH... except now we're curious to know if pH is different among sampling sites during dam removal. Let's subset our data frame so that we just have data from during the dam removal.
+
+```{r}
+
+during_dam <- subset(Elwha_data,Elwha_data$Dam_Condition=="During removal")
+during_dam[1:5,1:5]
+
+```
+
+Now that we've created a subset, we need to use analysis of variance (ANOVA) to test for differences among sites, since there are more than two. Remember standard deviation? Variance is the square of standard deviation (sd^2). ANOVA is used when there are more than two categories for a given independent variable (<code>Site_Name</code>), and a continuous independent variable (<code>pH</code>). Using <code>str()</code> for our new subset shows that there are 5 different sites, and pH is still continuous, so ANOVA is appropriate.
+
+```{r}
+
+pH_ANOVA <- aov(pH~Site_Name, data=during_dam)
+summary(pH_ANOVA)
+
+```
+
+Let's report our results in the context of the study: <b>There was no significant difference in pH among sampling sites during dam removal (F=1.38; df=4,98; p=0.245)</b>. We can also make a nice figure to show these differences.
+
+```{r}
+
+plot(pH~Site_Name, data=Elwha_data)
+
+```
+
+These boxplots are useful because they show us outliers (the two open circles in ES1), medians (thick black lines in the middle of the boxes), quartiles (outer bounds of the boxes), and minimum and maximum values (excluding outliers; the lines at the end of the dotted-line arms). We can get an idea of the distributions for each site this way. 
+
+<b>Now it's your turn: Are there site differences in temperature during dam removal? Don't forget to subset the dataset as shown above. Produce a boxplot to help illustrate your results. Don't forget to report your results in the context of the study. Copy-paste your intputs and outputs from the console (and copy-paste your lovely boxplot) into the addendum.</b>
+
+We can also make a nice bar chart with standard deviation, though. Just like in Excel, we need to calculate the mean and standard deviation of each group.
+
+
+```{r}
+chooseCRANmirror(ind=1)
+install.packages("plyr",repos='http://cran.us.r-project.org')
+install.packages("dplyr",repos='http://cran.us.r-project.org') #different packages house different sets of functions - we need a function in package plyr
+library(plyr)
+library(dplyr) #tells R to open the library of functions contained in plyr
+
+for_aov_plot <- ddply(during_dam,~Site_Name,summarize,mean=mean(pH, na.rm=TRUE),sd=sd(pH, na.rm = TRUE))
+
+for_aov_plot
+
+install.packages("ggplot2")
+library(ggplot2)
+
+plot <- ggplot(for_aov_plot, aes(x=Site_Name, y=mean)) + geom_bar(aes(fill=Site_Name),stat="identity", color="black", position=position_dodge()) + geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd)) + labs(x="Sample Site",y="pH",fill="Sample Site")
+
+plot
+
+```
+
+Look how beautiful our graph is! We've configured all of the axis labels on it, too. 
+
+What about all of the other continuous variables, though? We can examine relationships between continuous variables with regression--hopefully another familiar term from previous quarters! Let's test to see if increased pH during dam removal affects dissolved oxygen (which would be very important to organisms living within the river).
+
+```{r}
+
+DO_pH_reg <- lm(Dissolved_oxygen~pH, data=Elwha_data)
+DO_pH_reg
+summary(DO_pH_reg)
+
+```
+
+Let's report our results in the context of the study: <b>There was no significant relationship between dissolved oxygen and pH (F=1.44; df=1,117; p=0.2319). pH only explains 0.375% of the variation in dissolved oxygen.</b> Let's make a plot to go with our results.
+
+```{r}
+
+plot(Dissolved_oxygen~pH, data=Elwha_data,xlab="pH", ylab="Dissolved oxygen (mg/L)") #the plot function doesn't use any special packages - it is in what we call base R; for units on Dissolved oxygen, we should check the metadata
+abline(lm(Dissolved_oxygen~pH, data=Elwha_data)) #plots our regression line
+
+```
+
+Now it's more obvious how poor the fit is for our data. The scatterplot is scattered!
+
+<b>Test the relationship between temperature and dissolved oxygen (NOT Perc_dissolved_oxygen). Produce a plot to illustrate your results. Don't forget to report your results in the context of the study. Copy-paste the inputs and outputs from the console (and copy-paste your plot) into the addendum.</b>
+
+Let's try examining if there is a correlation between phosphate, and nitrate and nitrite concentrations. A correlation does not indicate that there is predictive power, like in a regression analysis. Correlation simply determines if the two variables are associated with one another.
+
+```{r}
+
+P_NO3_cor <- cor.test(Elwha_data$Phosphate_concentration,Elwha_data$Ammonium_concentration_,method="pearson",use = "complete.obs") #another way to reference the columns; use argument omits rows with NA values
+P_NO3_cor
+
+```
+
+The p-value is obvious, but the correlation coefficient is less evident. <code>cor</code> tells us the strength of the association between phosphate concentration and ammonium concentration--e.g. where -1 is a perfect negative correlation, 0 is no correlation, and 1 is a perfect positive correlation. Our value here is <code>0.2785478</code>. Let's report our results in the context of the study: <b> There is a significant association between phosphate concentration and ammonium concentration (t=3.47, df=143, p=0.000693). Phosphate concentration was moderately positively correlated with ammonium concentration (r=0.279).</b> Let's make another plot to look at the correlation.
+
+```{r}
+
+plot(Elwha_data$Phosphate_concentration~Elwha_data$Nitrate_and_Nitrite_concentration, xlab="Nitrate & Nitrite (micromolar)", ylab="Phosphate (micromolar)")
+abline(lm(Elwha_data$Phosphate_concentration~Elwha_data$Nitrate_and_Nitrite_concentration))
+
+```
+
+<b>What about a correlation between nitrate & nitrite concentration, and ammonium concentration? Produce a plot to illustrate your results. Don't forget to report your results in the context of the study. Copy-paste the inputs and outputs from the console into the addendum, including your plot. Then, answer the remaining conceptual questions in the addendum.</b>
