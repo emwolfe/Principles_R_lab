@@ -27,7 +27,7 @@ Additional disclaimer: For simplicity, we are running parametric statistical tes
 2. Create a new folder on your Desktop called <code>Lab 2</code>.
 3. Move your downloaded addendum into the new folder on the desktop. This folder is going to be your working directory, so anything else you download needs to be moved there.
 
-![Figure 1. Screenshot of spreadsheet after finding and replacing spaces and symbols in Excel.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\inside_folder.jpg)
+![Figure 1. Screenshot of spreadsheet after finding and replacing spaces and symbols in Excel.](inside_folder.jpg)
 
 ---
 #Step 1: Collect the data
@@ -44,7 +44,7 @@ The other file is an .xml document that gives us available metadata. Metadata ar
 
 Now that we have our data downloaded locally, let's open it up in Excel. Move your file from your downloads to the Desktop folder you created. Navigate to your Lab 2 folder and open up the .csv file. If some of the values appear as ###, that means that the column isn't wide enough. Select all (<code>Ctrl + A</code>) and click on Format on the Home ribbon, then select AutoFit Column Width. You can also double click on an individual column line between cells at the header row, and it will change the column size so you can see everything written in the column (it will fit to the data). It should look like this:
 
-![Figure 2. Screenshot of the downloaded csv spreadsheet.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\csv_view.jpg)
+![Figure 2. Screenshot of the downloaded csv spreadsheet.](csv_view.jpg)
 
 The structure of this spreadsheet is critical to analysis in R. Some key things to notice include:
 
@@ -56,19 +56,19 @@ This is how most types of data should be organized for statistical analysis. Whe
 
 1. <b>Column headers should not have spaces within the names.</b> Let's replace those now by pressing <b>Ctrl + H</b> (Find and Replace). Highlight only row 1 and fill out the box like in the screenshot below (replacing all spaces with underscores), then hit Replace All (you should see 14 replacements).
 
-![Figure 3. Screenshot of spreadsheet after finding and replacing spaces in Excel.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\replace_spaces.jpg)
+![Figure 3. Screenshot of spreadsheet after finding and replacing spaces in Excel.](replace_spaces.jpg)
 
 2. <b>NS (no sample) needs to be replaced with NA.</b> This is just so R will know to exclude these rows. Go ahead and press <b>Ctrl + H</b> again to find and replace all of the "NS" values with "NA" values instead. You should see 112 replacements.
 
-![Figure 4. Screenshot of spreadsheet after finding and replacing spaces in Excel.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\NS_replace.jpg)
+![Figure 4. Screenshot of spreadsheet after finding and replacing spaces in Excel.](NS_replace.jpg)
 
 We should have a spreadsheet that looks something like this:
 
-![Figure 5. Screenshot of spreadsheet after finding and replacing spaces and "NS" in Excel.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\after_replaces.jpg)
+![Figure 5. Screenshot of spreadsheet after finding and replacing spaces and "NS" in Excel.](after_replaces.jpg)
 
 3. <b>Remove the + and % that appear in two of the column headers.</b> It will make it easier to refer to these columns in R if we change their names now. Replace the <b>plus sign</b> with the word <b>and</b>, and replace the <b>percent sign</b> with <b>Perc</b>.
 
-![Fig. 6 Screenshot of spreadsheet after finding and replacing spaces and symbols in Excel.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\replace_symbols.jpg)
+![Fig. 6 Screenshot of spreadsheet after finding and replacing spaces and symbols in Excel.](replace_symbols.jpg)
 
 Save your changes - you should just be able to press <code>Ctrl+S</code> because you already moved the file into your desktop folder <code>Lab 2</code>. <b>Do not change the file name</b>. This is very important, because this tutorial assumes we have the same names. Now we're ready to import into R!
 
@@ -76,32 +76,32 @@ Save your changes - you should just be able to press <code>Ctrl+S</code> because
 
 Go ahead and open R Studio (search for it under the start window icon in the bottom left, or Applications on a Mac). Let's orient ourselves. You should see something like this open up on your computer, but the different parts of the display are annotated for you below:
 
-![Figure 7. Screenshot of R Studio. is.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\studio_annotated.jpg)
+![Figure 7. Screenshot of R Studio. is.](studio_annotated.jpg)
 
 We want to be able to write and edit our script, so let's create a new script. Click on the dropdown menu directly beneath File, and select R Script. You can also use the keyboard shortcut <code>Ctrl + Shift + N</code>.
 
-![Figure 8. Create a new script in R Studio.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\create_script.jpg)
+![Figure 8. Create a new script in R Studio.](create_script.jpg)
 
 R Studio is great because there is an autosave feature, but we should still save our script so we can use it another time. Go to File and Save as... and save your new script as <code>Lab_2_script</code>.
 
-![Figure 9. Saving a new script in R Studio.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\save_script.jpg)
+![Figure 9. Saving a new script in R Studio.](save_script.jpg)
 
 It will automatically be given the .R file type. Now we can start using R! Remember where you saved your .csv file? Go ahead and open the location in Windows Explorer. It should look something like this (don't worry about the extra files that show up here):
 
-![Figure 10. Screenshot of our Lab 2 folder on the desktop, which will serve as our working directory.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\folder_csv.jpg)
+![Figure 10. Screenshot of our Lab 2 folder on the desktop, which will serve as our working directory.](folder_csv.jpg)
 
 
 Once you have that open, go ahead and right click on the file address and <b>Copy address as text</b>. 
 
-![Figure 11. Right-click on the file address at the top to Copy address as text and paste into R Studio.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\copy_address.jpg)
+![Figure 11. Right-click on the file address at the top to Copy address as text and paste into R Studio.](copy_address.jpg)
 
 To set your working directory, type the following code into your newly-saved script and paste your path in between the quotation marks:
 
 ```{r}
 
-#You may need to add extra backslashes for your path to resemble what is in the example. Mine originally pastes in as C:\Users\emwolfe\Desktop\Lab 2, but for R to read it, we need to have double backslashes. Failing to add the backslashes will cause an error message and you won't be able to set the working directory.
+#You may need to add extra backslashes for your path to resemble what is in the example. Mine originally pastes in as C:\Users\wolem\Dropbox\School\TA\13. Spring 2021\Lab\Lab 8\Principles_R_lab, but for R to read it, we need to have double backslashes. Failing to add the backslashes will cause an error message and you won't be able to set the working directory.
 
-setwd("C:\\Users\\emwolfe\\Desktop\\Lab 2")
+setwd("C:\\Users\\wolem\\Dropbox\\School\\TA\\13. Spring 2021\\Lab\\Lab 8\\Principles_R_lab")
 getwd()
 
 ```
@@ -178,7 +178,7 @@ Now that we know the standard deviation, we can report: <b>The pH (mean?sd) aver
 
 Instead of standard deviation, we are going to calculate standard error based on our alpha = 0.05. However, we need to divide 0.05 in half (because we are doing a two-sided test), because we need to consider values at the very tail ends on either side of a normal distribution, like the one pictured below.
 
-![Figure 12. Example of a normal distribution from MathisFun.com.](C:\\Users\\emwolfe\\Desktop\\Lab_2_screenshots\\normal-distrubution-large.svg)
+![Figure 12. Example of a normal distribution from MathisFun.com.](normal-distrubution-large.svg)
 
 ```{r}
 
