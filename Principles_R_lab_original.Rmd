@@ -96,7 +96,7 @@ See how it says <code>Untitled1</code> in the corner? It's already opened an R s
 
 </center>
 
-Now we remember what we learned about an <code>R Project</code> being a self-contained directory? We can check this by asking R what the current working directory is. Type the following code into your newly-saved script, and then either highlight it and click <code>CTRL + Enter</code> or click the <code>Run</code> button in the source pane:
+Now remember what we learned about an <code>R Project</code> being a self-contained directory? We can check this by asking R what the current working directory is. Type the following code into your newly-saved script, and then either highlight it and press <code>CTRL + Enter</code> (<code>CMD + Enter</code> on an Apple keyboard) or click the <code>Run</code> button in the script pane:
 
 ```{r check_wd}
 
@@ -108,7 +108,7 @@ getwd() #tells you current working directory information
 
 What is the output? R should confirm that your current working directory matches the path name you see in the viewer pane. If anything else shows up after <code>getwd()</code>, consult your TA.
 
-Now that we have told R where to look for our files, we can import our .csv that we looked at earlier. Note that the .csv is <i>already included within the project directory</i>, so you don't need to upload anything. First, we are creating an object called Elwha_data in our environment that is a data frame, using the data in our .csv file. <b>R is case sensitive.</b> When typing function or object names, you must be <b>exact</b> or R will produce an error because it will not recognize the command. This is why it is helpful to replace spaces with underscores because they are easier to see. Our data frame name has both a capital letter to start, and an underscore that we need to remember to be able to reference it.
+Now that we have told R where to look for our files, we can import our .csv that we looked at earlier. Note that the .csv is <i>already included within the project directory</i>, so you don't need to upload anything. First, we are creating an object called <code>Elwha_data</code> in our environment that is a data frame, using the data in our .csv file. <b>R is case sensitive.</b> When typing function or object names, you must be <b>exact</b> or R will produce an error because it will not recognize the command. This is why it is helpful to replace spaces with underscores because they are easier to see. Our data frame name has both a capital letter to start, and an underscore that we need to remember to be able to reference it.
 
 ```{r load_data}
 
@@ -120,7 +120,7 @@ colnames(Elwha_data)
 
 But before we go further, what do you notice about the column names? 
 
-1. <b>Column headers should not have spaces within the names.</b> This can cause issues when working in R since names must be exact.
+1. <b>Column headers should not have spaces within the names.</b> This can cause issues when working in R since names must be exact. R will also convert spaces to periods, which can be confused with function names.
 2. <b>Remove the + and % that appear in two of the column headers.</b> It will make it easier to refer to these columns in R if we change their names.
 3. <b>NS (no sample) needs to be replaced with NA.</b> This is just so R will know to exclude these rows. 
 
@@ -226,7 +226,7 @@ sd_pH <- sd(Elwha_data$pH, na.rm = TRUE); sd_pH
 
 ```
 
-Now that we know the standard deviation, we can report: <b>The pH (mean±sd) averaged `r mean_pH`±`r sd_pH`` over the course of the study</b>. This is similar to the calculation of confidence intervals, which give us the probability that the true mean falls within a certain range. Since we have been using alpha = 0.05 as our significance threshold in Principles, let's calculate a 95% confidence interval for pH.
+Now that we know the standard deviation, we can report: <b>The pH (mean±sd) averaged `r mean_pH`±`r sd_pH` over the course of the study</b>. This is similar to the calculation of confidence intervals, which give us the probability that the true mean falls within a certain range. Since we have been using alpha = 0.05 as our significance threshold in Principles, let's calculate a 95% confidence interval for pH.
 
 Instead of standard deviation, we are going to calculate standard error based on our alpha = 0.05. However, we need to divide 0.05 in half (because we are doing a two-sided test), because we need to consider values at the very tail ends on either side of a normal distribution, like the one pictured below.
 
@@ -247,9 +247,9 @@ left; right
 
 ```
 
-We can interpret this as being 95% confident that the true mean pH is found between `r left` and `r right``, assuming that our distribution is normal. 
+We can interpret this as being 95% confident that the true mean pH is found between `r left` and `r right`, assuming that our distribution is normal. 
 
-#Step 4: Analyze the data in R
+# Step 4: Analyze the data in R
 
 However, we want to answer our question about dam removal, and whether or not that affected water quality. Think back to what <code>str()</code> told us about our data--we have two treatment categories: before removal, and during dam removal. Let's compare the mean pH in each group, and see if there is a treatment effect; i.e., did dam removal affect pH?
 
@@ -272,7 +272,7 @@ during_dam[1:5,1:5]
 
 ```
 
-Now that we've created a subset, we need to use analysis of variance (ANOVA) to test for differences among sites, since there are more than two. Remember standard deviation? Variance is the square of standard deviation (sd^2). ANOVA is used when there are more than two categories for a given independent variable (<code>Site_Name</code>), and a continuous independent variable (<code>pH</code>). Using <code>str()</code> for our new subset shows that there are 5 different sites, and pH is still continuous, so ANOVA is appropriate.
+Now that we've created a subset, we need to use analysis of variance (ANOVA) to test for differences among sites, since there are more than two. Remember standard deviation? Variance is the square of standard deviation (sd^2). ANOVA is used when there are more than two categories for a given independent variable (<code>Site_Name</code>), and a continuous dependent variable (<code>pH</code>). Using <code>str()</code> for our new subset shows that there are 5 different sites, and pH is still continuous, so ANOVA is appropriate.
 
 ```{r ANOVA}
 
