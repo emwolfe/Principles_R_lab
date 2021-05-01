@@ -277,7 +277,7 @@ Now that we've created a subset, we need to use analysis of variance (ANOVA) to 
 ```{r ANOVA}
 
 pH_ANOVA <- aov(pH~Site_Name, data=during_dam)
-summary(pH_ANOVA)
+summarypH <- summary(pH_ANOVA); summarypH
 
 ```
 
