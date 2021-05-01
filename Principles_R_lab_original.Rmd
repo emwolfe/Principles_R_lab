@@ -113,7 +113,7 @@ Now that we have told R where to look for our files, we can import our .csv that
 ```{r load_data}
 
 Elwha_data <- read.csv("Elwha_estuary_water_quality_2006-2014.csv",check.names = F) #reading in our .csv
-View(Elwha_data) #look at the data frame you created
+Elwha_data #look at the data frame you created
 colnames(Elwha_data)
 
 ```
