@@ -16,7 +16,7 @@ getwd() #tells you current working directory information
 ## ----load_data---------------------------------------------------------------------------------------------------------
 
 Elwha_data <- read.csv("Elwha_estuary_water_quality_2006-2014.csv",check.names = F) #reading in our .csv
-View(Elwha_data) #look at the data frame you created
+Elwha_data #look at the data frame you created
 colnames(Elwha_data)
 
 
@@ -120,7 +120,7 @@ during_dam[1:5,1:5]
 ## ----ANOVA-------------------------------------------------------------------------------------------------------------
 
 pH_ANOVA <- aov(pH~Site_Name, data=during_dam)
-summary(pH_ANOVA)
+summarypH <- summary(pH_ANOVA); summarypH
 
 
 
