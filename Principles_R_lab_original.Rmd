@@ -1,6 +1,7 @@
 ---
-title: 'Lab 8: Workshop in open-source programming and statistics'
-output:
+title: 'Workshop in open-source programming and statistics'
+author: Emily Wolfe
+  output:
   html_document: default
   pdf_document: default
 editor_options:
@@ -38,7 +39,7 @@ Additional disclaimer: For simplicity, we are running parametric statistical tes
 ---
 
 # Step 1: Collect the data
-Before we can use R, we need to collect our data. Today we will be using a publicly-available dataset from the United States Geological Survey (USGS). The title of the study we are using is: <b>Ecological parameters in the Elwha River estuary before and during dam removal</b>. The USGS page is located at this URL: <code> https://www.sciencebase.gov/catalog/item/58e5437ae4b09da679997d4e</code>. Look through all of the <b>Child Items</b> by clicking <b>More</b>; we will be going to the file entitled: <b>Water quality in the Elwha River estuary, Washington, from 2006 to 2014</b>. Visit this page and check out the information provided. You should find a summary of the study, followed by a section titled "Attached Files" that includes two files.
+Before we can use R, we need to collect our data. Today we will be using a publicly-available dataset from the United States Geological Survey (USGS). The title of the study we are using is: <b>Ecological parameters in the Elwha River estuary before and during dam removal</b>. The USGS page is located at this URL: <code> https://www.sciencebase.gov/catalog/item/58e5437ae4b09da679997d4e</code>, and the published study is located [here](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1002/ecm.1268). Look through all of the <b>Child Items</b> by clicking <b>More</b>; we will be going to the file entitled: <b>Water quality in the Elwha River estuary, Washington, from 2006 to 2014</b>. Visit this page and check out the information provided. You should find a summary of the study, followed by a section titled "Attached Files" that includes two files.
 
 The .csv is a comma-separated values text file. This type of file is viewable as a spreadsheet in Excel, but you can also view it in a text editor like Notepad. <b>Download this and take a look around at not only what it contains, but how the data are oriented.</b> It is very important to know if your data are organized in a way that will be understood by the commands you use in your R scripts. When files are in .csv format, it is usually a good sign. The structure of this spreadsheet is critical to analysis in R. Some key things to notice include:
 
@@ -124,9 +125,10 @@ But before we go further, what do you notice about the column names?
 2. <b>Remove the + and % that appear in two of the column headers.</b> It will make it easier to refer to these columns in R if we change their names.
 3. <b>NS (no sample) needs to be replaced with NA.</b> This is just so R will know to exclude these rows. 
 
-Let's go through and clean up these data so they are ready for analysis.
+Ordinarily, we would clean these data in R. (Bonus code is included here if you'd like to give it a try!) 
 
-```{r clean_up}
+```{r bonus_clean_up}
+###THIS IS A BONUS SECTION--IF YOU DO NOT WANT TO ATTEMPT TO CLEAN THE DATA ON YOUR OWN, SKIP THIS CHUNK!###
 
 colnames(Elwha_data)[colnames(Elwha_data) == "Nitrate + Nitrite concentration"] <- "Nitrate_Nitrite concentration" #rename column to remove +
 colnames(Elwha_data)[colnames(Elwha_data) == "% Dissolved oxygen"] <- "Perc Dissolved oxygen" #rename column to remove %
@@ -139,7 +141,14 @@ Elwha_data <- Elwha_data[1:147,] #gets rid of a few extra, empty rows that were 
 
 ```
 
-Great! Now let's take a look at our beautiful, cleaned data.
+However, for the purposes of this activity, the cleaned data are provided for you. 
+
+```{r cleaned_data}
+###skip this chunk if you did the bonus section###
+Elwha_data <- read.csv("cleaned_data.csv",check.names = T) #reading in our .csv
+```
+
+Let's take a look at our beautiful, cleaned data.
 
 ```{r data_look}
 str(Elwha_data) #tells us about our data frame
