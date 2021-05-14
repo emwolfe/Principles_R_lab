@@ -1,3 +1,7 @@
+install.packages(c("devtools","tmap","sf","dplyr","spData","ggplot2","viridis"))
+devtools::install_github("https://github.com/ropensci/USAboundariesData")
+install.packages("USAboundaries")
+
 library(tmap)
 library(sf)
 library(dplyr)
