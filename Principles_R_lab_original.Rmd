@@ -139,22 +139,6 @@ Elwha_data[Elwha_data == "NS"] <- NA #replaces "NS", which stands for "no sample
 
 Elwha_data <- Elwha_data[1:147,] #gets rid of a few extra, empty rows that were hanging around for no reason
 
-```
-
-Using <code>str()</code> is helpful because we can get an idea of the <b><u>str</u></b>ucture of our object (<code>Elwha_data</code>), and about what types of data R thinks is in our columns. If you look at the output, you can see that <code>Dam_Condition</code> is considered <code>character</code> and Temperature is <code>numeric</code>, while Replicate is <code>integer</code>. Well, R is almost right. With the newest R update, R now interprets most variables containing letters as character vectors even if they would more efficiently be classified as factors. What does this mean? Let's recall what these words mean first, especially with respect to data.
-
-1. <b><code>Characters</code> and <code>factors</code> refer to categorical data.</b> Things like HEADS or TAILS, or TRUE and FALSE are categorical. Data can be placed into a particular category; it is discrete. There are only so many categories that data can be sorted into, and those categories cannot be broken down into smaller classes. Factors usually contain words, which make them easy to spot.
-2. <b><code>Numeric</code> is another word for continuous data.</b> These data can take on any value--even a fraction.  An example of continuous data are measurements of plant height (or just height in general). These data are always numbers. 
-3. <b><code>Integer</code> is another word for whole number.</b> This means that they are never fractions (i.e. decimals). Count data would fall into this category because you can only count a whole number of elephants, for example. You would (hopefully) never count half an elephant.
-
-With that said, let's change some of these variables into factors and numeric vectors.
-
-```{r factors}
-###THIS IS A BONUS SECTION--IF YOU DO NOT WANT TO ATTEMPT TO CLEAN THE DATA ON YOUR OWN, SKIP THIS CHUNK!###
-
-Elwha_data$Dam_Condition <- as.factor(Elwha_data$Dam_Condition) #the dollar sign helps us give R an absolute reference, similar to Excel syntax
-Elwha_data$Site_Name <- as.factor(Elwha_data$Site_Name)
-
 Elwha_data$Phosphate_concentration <- as.numeric(Elwha_data$Phosphate_concentration)
 Elwha_data$Nitrate_Nitrite_concentration <- as.numeric(Elwha_data$Nitrate_Nitrite_concentration)
 Elwha_data$Ammonium_concentration <- as.numeric(Elwha_data$Ammonium_concentration)
@@ -167,19 +151,34 @@ Elwha_data$pH <- as.numeric(Elwha_data$pH)
 
 ```
 
-Now let's look at the data frame structure again to make sure our changes were made appropriately.
-
-```{r structure_data}
-###THIS IS A BONUS SECTION--IF YOU DO NOT WANT TO ATTEMPT TO CLEAN THE DATA ON YOUR OWN, SKIP THIS CHUNK!###
-str(Elwha_data)
-
-```
-
 However, for the purposes of this activity, the cleaned data are provided for you. 
 
 ```{r cleaned_data}
 ###skip this chunk if you did the bonus section###
 Elwha_data <- read.csv("cleaned_data.csv",check.names = T) #reading in our .csv
+```
+
+Using <code>str()</code> is helpful because we can get an idea of the <b><u>str</u></b>ucture of our object (<code>Elwha_data</code>), and about what types of data R thinks is in our columns. If you look at the output, you can see that <code>Dam_Condition</code> is considered <code>character</code> and Temperature is <code>numeric</code>, while Replicate is <code>integer</code>. Well, R is almost right. With the newest R update, R now interprets most variables containing letters as character vectors even if they would more efficiently be classified as factors. What does this mean? Let's recall what these words mean first, especially with respect to data.
+
+1. <b><code>Characters</code> and <code>factors</code> refer to categorical data.</b> Things like HEADS or TAILS, or TRUE and FALSE are categorical. Data can be placed into a particular category; it is discrete. There are only so many categories that data can be sorted into, and those categories cannot be broken down into smaller classes. Factors usually contain words, which make them easy to spot.
+2. <b><code>Numeric</code> is another word for continuous data.</b> These data can take on any value--even a fraction.  An example of continuous data are measurements of plant height (or just height in general). These data are always numbers. 
+3. <b><code>Integer</code> is another word for whole number.</b> This means that they are never fractions (i.e. decimals). Count data would fall into this category because you can only count a whole number of elephants, for example. You would (hopefully) never count half an elephant.
+
+With that said, let's change some of these variables into factors.
+
+```{r factors}
+
+Elwha_data$Dam_Condition <- as.factor(Elwha_data$Dam_Condition) #the dollar sign helps us give R an absolute reference, similar to Excel syntax
+Elwha_data$Site_Name <- as.factor(Elwha_data$Site_Name)
+
+```
+
+Now let's look at the data frame structure again to make sure our changes were made appropriately.
+
+```{r structure_data}
+
+str(Elwha_data)
+
 ```
 
 Let's take a look at our beautiful, cleaned data.
