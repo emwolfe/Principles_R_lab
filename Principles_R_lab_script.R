@@ -33,23 +33,6 @@ Elwha_data[Elwha_data == "NS"] <- NA #replaces "NS", which stands for "no sample
 
 Elwha_data <- Elwha_data[1:147,] #gets rid of a few extra, empty rows that were hanging around for no reason
 
-
-
-## ----cleaned_data-------------------------------------------------------------------
-###skip this chunk if you did the bonus section###
-Elwha_data <- read.csv("cleaned_data.csv",check.names = T) #reading in our .csv
-
-
-## ----data_look----------------------------------------------------------------------
-str(Elwha_data) #tells us about our data frame
-Elwha_data[1:5,1:5] #lets us preview the first 5 rows and columns, respectively - [r,c], and the : between numbers means that you are looking at the continuous range between them, like what appears in Excel when you select consecutive cells. You could read it as "through," so that 1:5 would read 1 through 5.
-
-
-## ----factors------------------------------------------------------------------------
-
-Elwha_data$Dam_Condition <- as.factor(Elwha_data$Dam_Condition) #the dollar sign helps us give R an absolute reference, similar to Excel syntax
-Elwha_data$Site_Name <- as.factor(Elwha_data$Site_Name)
-
 Elwha_data$Phosphate_concentration <- as.numeric(Elwha_data$Phosphate_concentration)
 Elwha_data$Nitrate_Nitrite_concentration <- as.numeric(Elwha_data$Nitrate_Nitrite_concentration)
 Elwha_data$Ammonium_concentration <- as.numeric(Elwha_data$Ammonium_concentration)
@@ -62,10 +45,27 @@ Elwha_data$pH <- as.numeric(Elwha_data$pH)
 
 
 
+## ----cleaned_data-------------------------------------------------------------------
+###skip this chunk if you did the bonus section###
+Elwha_data <- read.csv("cleaned_data.csv",check.names = T) #reading in our .csv
+
+
+## ----factors------------------------------------------------------------------------
+
+Elwha_data$Dam_Condition <- as.factor(Elwha_data$Dam_Condition) #the dollar sign helps us give R an absolute reference, similar to Excel syntax
+Elwha_data$Site_Name <- as.factor(Elwha_data$Site_Name)
+
+
+
 ## ----structure_data-----------------------------------------------------------------
 
 str(Elwha_data)
 
+
+
+## ----data_look----------------------------------------------------------------------
+str(Elwha_data) #tells us about our data frame
+Elwha_data[1:5,1:5] #lets us preview the first 5 rows and columns, respectively - [r,c], and the : between numbers means that you are looking at the continuous range between them, like what appears in Excel when you select consecutive cells. You could read it as "through," so that 1:5 would read 1 through 5.
 
 
 ## ----mean_pH------------------------------------------------------------------------
