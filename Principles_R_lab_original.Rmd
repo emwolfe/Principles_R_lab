@@ -294,7 +294,7 @@ Let's report our results in the context of the study: <b>There was no significan
 
 ```{r plot_pH, fig.align='center'}
 
-plot(pH~Site_Name, data=Elwha_data)
+plot(pH~Site_Name, data=during_dam)
 
 ```
 
