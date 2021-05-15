@@ -307,8 +307,6 @@ We can also make a nice bar chart with standard deviation, though. Just like in 
 chooseCRANmirror(ind=1)
 install.packages("tidyverse",repos='http://cran.us.r-project.org')
 
-library(tidyverse) #tidyverse contains plyr, dplyr, ggplot2, and others
-
 for_aov_plot <- ddply(during_dam,~Site_Name,summarize,mean=mean(pH, na.rm=TRUE),sd=sd(pH, na.rm = TRUE))
 
 for_aov_plot
