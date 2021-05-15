@@ -305,8 +305,8 @@ We can also make a nice bar chart with standard deviation, though. Just like in 
 
 ```{r libraries, fig.align='center'}
 chooseCRANmirror(ind=1)
-install.packages("plyr",repos='http://cran.us.r-project.org')
-install.packages("dplyr",repos='http://cran.us.r-project.org') #different packages house different sets of functions - we need a function in package plyr
+install.packages("tidyverse",repos='http://cran.us.r-project.org')
+
 library(plyr) #tells R to open the library of functions contained in plyr
 library(dplyr) #tells R to open the library of functions contained in dplyr
 
@@ -314,7 +314,6 @@ for_aov_plot <- ddply(during_dam,~Site_Name,summarize,mean=mean(pH, na.rm=TRUE),
 
 for_aov_plot
 
-install.packages("ggplot2")
 library(ggplot2)
 
 plot <- ggplot(for_aov_plot, aes(x=Site_Name, y=mean)) + geom_bar(aes(fill=Site_Name),stat="identity", color="black", position=position_dodge()) + geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd)) + labs(x="Sample Site",y="pH",fill="Sample Site")
