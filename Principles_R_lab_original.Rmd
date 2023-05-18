@@ -125,33 +125,7 @@ But before we go further, what do you notice about the column names?
 2. <b>Remove the + and % that appear in two of the column headers.</b> It will make it easier to refer to these columns in R if we change their names.
 3. <b>NS (no sample) needs to be replaced with NA.</b> This is just so R will know to exclude these rows. 
 
-Ordinarily, we would clean these data in R. (Bonus code is included here if you'd like to give it a try!) 
-
-```{r bonus_clean_up}
-###THIS IS A BONUS SECTION--IF YOU DO NOT WANT TO ATTEMPT TO CLEAN THE DATA ON YOUR OWN, SKIP THIS CHUNK!###
-
-colnames(Elwha_data)[colnames(Elwha_data) == "Nitrate + Nitrite concentration"] <- "Nitrate_Nitrite concentration" #rename column to remove +
-colnames(Elwha_data)[colnames(Elwha_data) == "% Dissolved oxygen"] <- "Perc Dissolved oxygen" #rename column to remove %
-
-names(Elwha_data) <- gsub(" ", "_", names(Elwha_data)) #replace spaces with underscores
-
-Elwha_data[Elwha_data == "NS"] <- NA #replaces "NS", which stands for "no sample was collected" with NA, the correct syntax for R to recognize a missing value
-
-Elwha_data <- Elwha_data[1:147,] #gets rid of a few extra, empty rows that were hanging around for no reason
-
-Elwha_data$Phosphate_concentration <- as.numeric(Elwha_data$Phosphate_concentration)
-Elwha_data$Nitrate_Nitrite_concentration <- as.numeric(Elwha_data$Nitrate_Nitrite_concentration)
-Elwha_data$Ammonium_concentration <- as.numeric(Elwha_data$Ammonium_concentration)
-Elwha_data$Salinity <- as.numeric(Elwha_data$Salinity)
-Elwha_data$Temperature <- as.numeric(Elwha_data$Temperature)
-Elwha_data$Turbidity <- as.numeric(Elwha_data$Turbidity)
-Elwha_data$Dissolved_oxygen <- as.numeric(Elwha_data$Dissolved_oxygen)
-Elwha_data$Perc_Dissolved_oxygen <- as.numeric(Elwha_data$Perc_Dissolved_oxygen)
-Elwha_data$pH <- as.numeric(Elwha_data$pH)
-
-```
-
-However, for the purposes of this activity, the cleaned data are provided for you. 
+Ordinarily, we would clean these data in R. However, for the purposes of this activity, the cleaned data are provided for you. 
 
 ```{r cleaned_data}
 ###skip this chunk if you did the bonus section###
