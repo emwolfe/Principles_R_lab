@@ -6,7 +6,6 @@ Fun fact! This lab was originally written as an [R Markdown](http://rmarkdown.rs
 #for example:
 2 + 2
 
-<<<<<<< HEAD:README.md
 #hint: in RStudio Cloud, click on the green triangle in the top right corner of this chunk, then look at the console below for the output!
 ```
 
@@ -319,6 +318,3 @@ abline(lm(Elwha_data$Phosphate_concentration~Elwha_data$Nitrate_Nitrite_concentr
 -   basic plotting in base R and ggplot2
 
 Thanks for investing time and energy in this workshop! If you have any technical feedback, please contact the me through [GitHub](https://github.com/emwolfe).
-=======
-Spring 2023: Updated to remove the optional data cleaning steps performed in R.
->>>>>>> 66652e9d52590ed21cd6f7e2c87eccbd623157b6:about.md
